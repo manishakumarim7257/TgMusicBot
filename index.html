@@ -680,4 +680,183 @@
         <p><span class="bold">Active Bots:</span> 03</p>
     </div>
 
-    <!-
+    <!-- Chat Box 1: Laado Music -->
+    <div class="card" id="online-card">
+        <div class="chat-box">
+            <div class="chat-message-row">
+                <img src="laado-music.png" alt="User Avatar" class="chat-dp">
+                <div class="message-content-wrapper">
+                    <div class="user-name">˹ʟᴀᴀᴅᴏ ꭙ ᴍᴜsɪᴄ˼ ♪</div>
+                    <div class="message-bubble">Username: @laado_musicbot</div>
+                    <div class="message-time">🟢 Online</div>
+                    <div class="button-container">
+                        <a href="https://t.me/laado_musicbot?startgroup=true" class="help-button">ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴄʜᴀᴛ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Box 2: PlayerPro Music -->
+    <div class="card" id="open-card">
+        <div class="chat-box">
+            <div class="chat-message-row">
+                <img src="playerpro-music.png" alt="User Avatar" class="chat-dp">
+                <div class="message-content-wrapper">
+                    <div class="user-name">𝗣𝗹𝗮𝘆𝘦𝘳𝘱𝙧𝘰 ꭙ 𝗠𝑢𝑠𝑖𝑐 ♪</div>
+                    <div class="message-bubble">Username: @PlayerPro_MusicBot</div>
+                    <div class="message-time">🟢 Online</div>
+                    <div class="button-container">
+                        <a href="https://t.me/PlayerPro_MusicBot?startgroup=true" class="help-button">ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴄʜᴀᴛ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Box 3: Kuku Music -->
+    <div class="card" id="one-card">
+        <div class="chat-box">
+            <div class="chat-message-row">
+                <img src="kuku-music.png" alt="User Avatar" class="chat-dp">
+                <div class="message-content-wrapper">
+                    <div class="user-name">˹ᴋᴜᴋᴜ ꭙ ᴍᴜꜱɪᴄ˼ ♪</div>
+                    <div class="message-bubble">Username: @Kuku_MusicBot</div>
+                    <div class="message-time">🟢 Online</div>
+                    <div class="button-container">
+                        <a href="https://t.me/Kuku_MusicBot?startgroup=true" class="help-button">ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ᴄʜᴀᴛ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Feature 3: App developer Details -->
+    <div class="card" id="developer-card">
+        <h3>Developer & Support</h3>
+    </div>
+    
+    <!-- Chat Box 4: Owner details-->
+    <div class="card" id="owner-card">
+        <div class="chat-box">
+            <div class="chat-message-row">
+                <img src="my-dp.png" alt="User Avatar" class="chat-dp">
+                <div class="message-content-wrapper">
+                    <div class="user-name">Niraj Kumar</div>
+                    <div class="message-bubble">Username: @Comeback_009</div>
+                    <div class="message-time">ID: 7771481658</div>
+                    <div class="button-container">
+                        <a href="https://t.me/Comeback_009" class="my-button">any issue dm 💬</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initTelegramApp() {
+            const tg = window.Telegram?.WebApp;
+
+            if (tg) {
+                tg.ready();
+                tg.expand();
+
+                const user = tg.initDataUnsafe?.user;
+
+                if (user && user.id) {
+                    // Compact Profile Card
+                    document.getElementById('profile-tap-name').innerText = `${user.first_name} ${user.last_name || ''}`;
+                    document.getElementById('profile-tap-avatar').src = user.photo_url || "https://cloudflare.com";
+
+                    // Modal Details
+                    document.getElementById('profile-modal-name').innerText = `${user.first_name} ${user.last_name || ''}`;
+                    document.getElementById('profile-modal-username').innerText = user.username ? `@${user.username}` : 'No Username';
+                    document.getElementById('profile-modal-id').innerText = user.id;
+                    document.getElementById('profile-modal-lang').innerText = user.language_code || 'en';
+                    document.getElementById('profile-modal-avatar').src = user.photo_url || "https://cloudflare.com";
+
+                    clearInterval(checkInterval);
+                }
+            }
+        }
+
+        const checkInterval = setInterval(initTelegramApp, 500);
+
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            if (document.getElementById('profile-modal-id').innerText === "Loading...") {
+                // Compact Profile Card
+                document.getElementById('profile-tap-name').innerText = "Web Browser Mode";
+                document.getElementById('profile-tap-avatar').src = "https://cloudflare.com";
+
+                // Modal Details
+                document.getElementById('profile-modal-name').innerText = "Web Browser Mode";
+                document.getElementById('profile-modal-username').innerText = "@not_inside_tg";
+                document.getElementById('profile-modal-id').innerText = "Offline_ID_101";
+                document.getElementById('profile-modal-lang').innerText = "en";
+                document.getElementById('profile-modal-avatar').src = "https://cloudflare.com";
+            }
+        }, 5000);
+
+        // Profile Modal Functions
+        function openProfileModal() {
+            document.getElementById('profileModalOverlay').classList.add('show');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModalOverlay').classList.remove('show');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('profileModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProfileModal();
+            }
+        });
+
+        // Theme Management Fun
+        function openThemeModal() {
+            document.getElementById('themeModalOverlay').style.display = 'flex';
+        }
+
+        function closeThemeModal() {
+            document.getElementById('themeModalOverlay').style.display = 'none';
+        }
+
+        function setTheme(theme, element) {
+            document.body.className = theme;
+            
+            // Update active state
+            document.querySelectorAll('.theme-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            // Save to localStorage
+            localStorage.setItem('selectedTheme', theme);
+        }
+
+        // Load saved theme on page load
+        window.addEventListener('load', function() {
+            const savedTheme = localStorage.getItem('selectedTheme') || 'light-theme';
+            document.body.className = savedTheme;
+            
+            const themeElement = document.querySelector(`[data-theme="${savedTheme}"]`);
+            if (themeElement) {
+                document.querySelectorAll('.theme-option').forEach(el => {
+                    el.classList.remove('active');
+                });
+                themeElement.classList.add('active');
+            }
+        });
+
+        // Close theme modal on overlay click
+        document.getElementById('themeModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeThemeModal();
+            }
+        });
+    </script>
+</body>
+</html>
