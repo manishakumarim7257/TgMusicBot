@@ -263,6 +263,52 @@
             margin: 4px 0 0 0;
         }
 
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .status-online {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .status-away {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .status-offline {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        /* Active Time Box */
+        .active-time-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .active-time-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .active-time-value {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
         /* Profile Details Modal */
         .profile-modal-overlay {
             display: none;
@@ -300,6 +346,8 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.3s ease;
             overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes slideUp {
@@ -343,12 +391,62 @@
             border-radius: 50%;
             border: 4px solid var(--primary-color);
             object-fit: cover;
+            position: relative;
+        }
+
+        /* Status Indicator on Avatar */
+        .status-indicator {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid white;
+            bottom: 0;
+            right: 0;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-indicator.online {
+            background-color: #10b981;
+        }
+
+        .status-indicator.away {
+            background-color: #f59e0b;
+        }
+
+        .status-indicator.offline {
+            background-color: #6b7280;
         }
 
         .profile-modal-content p {
             margin: 12px 0;
             font-size: 14px;
             color: var(--text-color);
+        }
+
+        .profile-info-section {
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .profile-info-label {
+            font-size: 12px;
+            color: var(--primary-color);
+            font-weight: bold;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .profile-info-value {
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 500;
         }
 
         .profile-modal-footer {
@@ -668,11 +766,69 @@
             <div class="profile-modal-content">
                 <div class="profile-modal-avatar-container">
                     <img id="profile-modal-avatar" class="profile-modal-avatar" src="https://cloudflare.com" alt="User DP">
+                    <div class="status-indicator online" id="profile-status-indicator" title="User Status">●</div>
                 </div>
-                <p><span class="bold">Name:</span> <span id="profile-modal-name">Loading...</span></p>
-                <p><span class="bold">Username:</span> <span id="profile-modal-username">Loading...</span></p>
-                <p><span class="bold">ID:</span> <span id="profile-modal-id">Loading...</span></p>
-                <p><span class="bold">Language:</span> <span id="profile-modal-lang">Loading...</span></p>
+
+                <!-- User Basic Information -->
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">Name</span>
+                        <div class="profile-info-value" id="profile-modal-name">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">Username</span>
+                        <div class="profile-info-value" id="profile-modal-username">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">User ID</span>
+                        <div class="profile-info-value" id="profile-modal-id">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">Language</span>
+                        <div class="profile-info-value" id="profile-modal-lang">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- User Status Section -->
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">🟢 Current Status</span>
+                        <div class="profile-info-value" id="profile-modal-status">Online</div>
+                    </div>
+                </div>
+
+                <!-- Last Active Time -->
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">⏰ Last Active</span>
+                        <div class="profile-info-value" id="profile-modal-last-active">Just now</div>
+                    </div>
+                </div>
+
+                <!-- Active Time Duration -->
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">⌛ Active Duration Today</span>
+                        <div class="profile-info-value" id="profile-modal-active-time">Calculating...</div>
+                    </div>
+                </div>
+
+                <!-- Join Date -->
+                <div class="profile-info-section">
+                    <div>
+                        <span class="profile-info-label">📅 Member Since</span>
+                        <div class="profile-info-value" id="profile-modal-join-date">Today</div>
+                    </div>
+                </div>
             </div>
             <div class="profile-modal-footer">
                 <button class="profile-modal-close" onclick="closeProfileModal()">Close</button>
@@ -763,6 +919,101 @@
     </div>
 
     <script>
+        // Track user session start time
+        const userSessionStartTime = new Date();
+        let lastActivityTime = new Date();
+
+        // Update activity time on user interaction
+        document.addEventListener('click', () => {
+            lastActivityTime = new Date();
+        });
+
+        document.addEventListener('touchstart', () => {
+            lastActivityTime = new Date();
+        });
+
+        // Calculate active duration
+        function getActiveDuration() {
+            const now = new Date();
+            const diffMs = now - userSessionStartTime;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffDays > 0) {
+                return `${diffDays}d ${diffHours % 24}h`;
+            } else if (diffHours > 0) {
+                return `${diffHours}h ${diffMins % 60}m`;
+            } else {
+                return `${diffMins}m`;
+            }
+        }
+
+        // Get formatted last active time
+        function getLastActiveTime() {
+            const now = new Date();
+            const diffMs = now - lastActivityTime;
+            const diffSecs = Math.floor(diffMs / 1000);
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+
+            if (diffSecs < 60) {
+                return 'Just now';
+            } else if (diffMins < 60) {
+                return `${diffMins}m ago`;
+            } else if (diffHours < 24) {
+                return `${diffHours}h ago`;
+            } else {
+                return lastActivityTime.toLocaleDateString();
+            }
+        }
+
+        // Get user status based on activity
+        function getUserStatus() {
+            const diffMins = Math.floor((new Date() - lastActivityTime) / 60000);
+            if (diffMins < 5) return 'online';
+            if (diffMins < 30) return 'away';
+            return 'offline';
+        }
+
+        // Get status display text
+        function getStatusText() {
+            const status = getUserStatus();
+            if (status === 'online') return '🟢 Online';
+            if (status === 'away') return '🟡 Away';
+            return '⚪ Offline';
+        }
+
+        // Get status class
+        function getStatusClass() {
+            const status = getUserStatus();
+            return status === 'online' ? 'online' : (status === 'away' ? 'away' : 'offline');
+        }
+
+        // Update status indicators
+        function updateStatusIndicators() {
+            const statusIndicator = document.getElementById('profile-status-indicator');
+            const statusText = document.getElementById('profile-modal-status');
+            const lastActiveEl = document.getElementById('profile-modal-last-active');
+            const activeDurationEl = document.getElementById('profile-modal-active-time');
+
+            if (statusIndicator) {
+                statusIndicator.className = `status-indicator ${getStatusClass()}`;
+            }
+            if (statusText) {
+                statusText.textContent = getStatusText();
+            }
+            if (lastActiveEl) {
+                lastActiveEl.textContent = getLastActiveTime();
+            }
+            if (activeDurationEl) {
+                activeDurationEl.textContent = getActiveDuration();
+            }
+        }
+
+        // Update status every 30 seconds
+        setInterval(updateStatusIndicators, 30000);
+
         function initTelegramApp() {
             const tg = window.Telegram?.WebApp;
 
@@ -784,6 +1035,13 @@
                     document.getElementById('profile-modal-lang').innerText = user.language_code || 'en';
                     document.getElementById('profile-modal-avatar').src = user.photo_url || "https://cloudflare.com";
 
+                    // Set join date
+                    const today = new Date();
+                    document.getElementById('profile-modal-join-date').innerText = today.toLocaleDateString();
+
+                    // Initialize status indicators
+                    updateStatusIndicators();
+
                     clearInterval(checkInterval);
                 }
             }
@@ -804,11 +1062,19 @@
                 document.getElementById('profile-modal-id').innerText = "Offline_ID_101";
                 document.getElementById('profile-modal-lang').innerText = "en";
                 document.getElementById('profile-modal-avatar').src = "https://cloudflare.com";
+
+                // Set join date
+                const today = new Date();
+                document.getElementById('profile-modal-join-date').innerText = today.toLocaleDateString();
+
+                // Initialize status indicators
+                updateStatusIndicators();
             }
         }, 5000);
 
         // Profile Modal Functions
         function openProfileModal() {
+            updateStatusIndicators();
             document.getElementById('profileModalOverlay').classList.add('show');
         }
 
@@ -857,6 +1123,9 @@
                 });
                 themeElement.classList.add('active');
             }
+
+            // Initialize status on load
+            updateStatusIndicators();
         });
 
         // Close theme modal on overlay click
